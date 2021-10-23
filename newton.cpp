@@ -21,12 +21,12 @@ complex<double> poly_value(double polynomial[], int deg, complex<double> input)
 
 double max_radius(double polynomial[], int deg)
 {
-    double radius = 1;
+    double radius = 0;
     for (int i = 0; i < deg; i++)
     {
-        radius += pow(abs(polynomial[i] / polynomial[deg]), 2);
+        radius += abs(polynomial[i] / polynomial[deg]);
     }
-    return radius;
+    return max(1.0, radius);
 }
 
 int main()
