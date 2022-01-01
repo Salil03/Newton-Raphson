@@ -26,7 +26,6 @@ double max_radius(double polynomial[], int deg)
     {
         radius += abs(polynomial[i] / polynomial[deg]);
     }
-    return max(1.0, radius);
 }
 
 int main()
