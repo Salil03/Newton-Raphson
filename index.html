@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono&display=swap" rel="stylesheet">
+    <link href="styles/style.css" rel="stylesheet">
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script src="scripts/math.js" type="text/javascript"></script>
+    <script src="scripts/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.plot.ly/plotly-2.8.3.min.js"></script>
+</head>
+
+<body>
+    <h1>Finding Polynomial Root Solutions</h1>
+    <fieldset id="placeholder">
+        <p>Enter degree of polynomial(keep degree less than 20 if you don't want to wait too long)</p>
+        <input autofocus name="degree" type="number" id="degree">
+        <br>
+        <br>
+        <div id="button-placeholder">
+            <button id="initial-degree" onclick="getDegree()">Submit</button>
+        </div>
+    </fieldset>
+
+    <input type="button" value="Show Explanation" id="explanation-shower" onclick="showExplanation()">
+    <div id="explanation">
+        <p>A very rough implementation of Newton-Raphson method to find polynomial roots. Method taken from <a
+                href="http://pi.math.cornell.edu/~hubbard/NewtonInventiones.pdf">an interesting research paper.</a>.
+        </p>
+
+        <p>The algorithm is recursively defined as $$x_{n+1} = x_n + \frac{f(x_n)}{f^{\prime} (x_n)}$$</p>
+        <p>where \(x_1\) is an initial guess. Notably, convergence point depends crucially on inital guess. Finding
+            a
+            set of
+            initial guesses which allow us to find each root is a non-trivial task. Mainly
+            because a Newton map(which shows us where a particular starting point converges) is a fractal.</p>
+        <p>An initial point \(z_1\) is in the basin of a root \(r\) if the sequence \(z_{n+1} = z_{n}
+            + \frac{p(z_n)}{p^{\prime} (z_n)}, n \geq 1\) converges to \(r\).
+        </p>
+        <img src="images/newtonmap.png" width="500px" class="center">
+        <p style="text-align: center;">Newton map for \(p(z) = z^3 -2z +2\). Colours indicate the basins of each
+            root.
+            Red
+            points don't converge at all.</p>
+
+
+        This paper gives a recipe to construct a finite set of points such that, for every root of every such
+        polynomial, at
+        least one of these points will converge to this root.
+        Their main breakthrough is that only \(1.11 d \log^2 d\) inital points are required to guarantee the above
+        condition, where \(d\) is degree of polynomial.
+
+        <h3>The actual method</h3>
+
+        <p>Because I am too dumb to understand the whole paper(hopefully this changes one day), I just followed the
+            recipe given in section 9, aptly named as <b>A recipe for dessert</b>. Here is a small explanation of
+            what I
+            did
+            shamelessly based on the recipe:</p>
+
+        <ol>
+            <li>Get a polynomial \(p(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0\)</li>
+            <li>Find a radius \(R\) such that all roots lie within it. \(R = \sum_{i=0}^{n-1} \left\lvert
+                \frac{a_i}{a_n}\right\rvert\). Proof left to the reader :P</li>
+            <li>Construct \(v\) circles and \(j\) points on each of them placed equidistant to each other. The
+                specifics
+                of
+                this step can be read in section 9</li>
+            <li>Run newton's algorithm till we get \(p(x) < 0.0000001\).</li>
+        </ol>
+    </div>
+    <script src="scripts/main.js"></script>
+</body>
+
+</html>
