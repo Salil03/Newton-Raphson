@@ -129,7 +129,7 @@ function newtonRaphson(idx, inputs, deg, polynomial, slope, rootsList, startCurr
         return;
     }
     let input = inputs[idx];
-    const tolerance = 0.0000000001 * math.abs(input);
+    const tolerance = 0.00000000001 * math.abs(input);
     const cycle_lim = 1000;
     let cycle_curr = 0;
     let output = polyvalue(polynomial, deg, input);
@@ -148,7 +148,7 @@ function newtonRaphson(idx, inputs, deg, polynomial, slope, rootsList, startCurr
     {
         for (let index = 0; index < roots.length; index++)
         {
-            if (math.abs(math.subtract(roots[index], input)) <= tolerance)
+            if (math.abs(math.subtract(roots[index], input)) <= 0.00001)
             {
                 if (math.abs(polyvalue(polynomial, deg, input)) < math.abs(polyvalue(polynomial, deg, roots[index])))
                 {
@@ -180,7 +180,7 @@ function newtonRaphson(idx, inputs, deg, polynomial, slope, rootsList, startCurr
                 {
                     for (let index = 0; index < roots.length; index++)
                     {
-                        if (math.abs(math.subtract(roots[index], input2)) <= tolerance)
+                        if (math.abs(math.subtract(roots[index], input2)) <= 0.00001)
                         {
                             if (math.abs(polyvalue(polynomial, deg, input2)) < math.abs(polyvalue(polynomial, deg, roots[index])))
                             {
