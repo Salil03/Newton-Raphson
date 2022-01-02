@@ -84,8 +84,6 @@ function plotRoots()
         x_points.push(roots[i].re.toFixed(5));
         y_points.push(roots[i].im.toFixed(5));
     }
-    console.log(x_points);
-    console.log(y_points);
     var plotPoints = {
         x: x_points,
         y: y_points,
@@ -126,8 +124,8 @@ function newtonRaphson(idx, inputs, deg, polynomial, slope, rootsList, startCurr
         return;
     }
     let input = inputs[idx];
-    const tolerance = 0.000001;
-    const cycle_lim = math.ceil(deg * math.log2((1 + math.sqrt(2)) / tolerance));
+    const tolerance = 0.0000000001 * math.abs(input);
+    const cycle_lim = 1000;
     let cycle_curr = 0;
     let output = polyvalue(polynomial, deg, input);
     while (cycle_curr < cycle_lim && math.abs(output) > tolerance)
@@ -162,7 +160,7 @@ function newtonRaphson(idx, inputs, deg, polynomial, slope, rootsList, startCurr
         window.requestAnimationFrame(() =>
         {
             var root = document.createElement("li");
-            root.innerHTML = "\\(" + input.format({ precision: 5 }) + "\\)";
+            root.innerHTML = "\\(" + input.format({ notation: 'fixed', precision: 5 }) + "\\)";
             rootsList.appendChild(root);
             MathJax.typeset();
             if (input.im.toFixed(8) != 0)
@@ -192,7 +190,7 @@ function newtonRaphson(idx, inputs, deg, polynomial, slope, rootsList, startCurr
                 {
                     roots.push(math.conj(input));
                     var root_conj = document.createElement("li");
-                    root_conj.innerHTML = "\\(" + math.conj(input).format({ precision: 5 }) + "\\)";
+                    root_conj.innerHTML = "\\(" + math.conj(input).format({ notation: 'fixed', precision: 5 }) + "\\)";
                     rootsList.appendChild(root_conj);
                     MathJax.typeset();
                 }
@@ -275,6 +273,11 @@ function calcRoots()
     {
         for (let j = 0; j < points; j++)
         {
+            if (deg == 1)
+            {
+                inputs[(v - 1) * points + j] = math.Complex.fromPolar({ r: -polynomial[0], phi: 0 });
+                continue;
+            }
             inputs[(v - 1) * points + j] = math.Complex.fromPolar({ r: start_radius * (1 + math.sqrt(2)) * math.pow((deg - 1) / deg, (2 * v - 1) / (4 * circles)), phi: 2 * math.PI * j / points });
         }
     }
