@@ -46,8 +46,8 @@ int main()
     }
     derivative(polynomial, slope, deg);
     double d = (double)deg;
-    int circles = ceil(0.26632 * log(d));
-    int points = ceil(8.32547 * d * log(d));
+    int circles = max(ceil(0.26632 * log2(d)), 2.0);
+    int points = max(ceil(8.32547 * d * log2(d)), 2.0);
     double start_radius = max_radius(polynomial, deg);
 
     ofstream rad;
@@ -71,7 +71,7 @@ int main()
     for (int start = 0; start < circles * points; start++)
     {
         double tolerance = 0.0000001;
-        int cycle_lim = ceil(d * log((1 + sqrt(2)) / tolerance));
+        int cycle_lim = ceil(d * log2((1 + sqrt(2)) / tolerance));
         int cycle_curr = 0;
         complex<double> input = inputs[start];
         complex<double> output = poly_value(polynomial, deg, input);
@@ -96,7 +96,7 @@ int main()
                 break;
             }
         }
-        if (flag)
+        if (flag && abs(poly_value(polynomial, deg, input)) < tolerance)
         {
             roots.push_back(input);
         }
