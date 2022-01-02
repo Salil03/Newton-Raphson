@@ -56,7 +56,7 @@
         Their main breakthrough is that only \(1.11 d \log^2 d\) inital points are required to guarantee the above
         condition, where \(d\) is degree of polynomial.
 
-        <h3>The actual method</h3>
+        <h2>The actual method</h2>
 
         <p>Because I am too dumb to understand the whole paper(hopefully this changes one day), I just followed the
             recipe given in section 9, aptly named as <b>A recipe for dessert</b>. Here is a small explanation of
@@ -64,7 +64,7 @@
             did
             shamelessly based on the recipe:</p>
 
-        <ol>
+        <ul>
             <li>Get a polynomial \(p(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0\)</li>
             <li>Find a radius \(R\) such that all roots lie within it. We can compute all bounds given on <a
                     href="https://en.wikipedia.org/wiki/Geometrical_properties_of_polynomial_roots#Bounds_on_all_roots">Wikipedia</a>
@@ -78,12 +78,12 @@
                     without convergence.</li>
             <li>Because coefficients of \(p(x)\) are real, we are guaranteed that \(\overline{z}\) is a root if \(z\) is
                 a root.</li>
-        </ol>
+        </ul>
     </div>
     <div id="todo">
-        <h3>Limitations</h3>
+        <h4>Limitations</h4>
         <ul>
-            <li>Very rarely, some roots are not found due to precision issues.</li>
+            <li>Sometimes 1 or 2 roots are not found maybe due to precision issues.</li>
             <li>If you switch to another tab in browser, the process halts</li>
             <li>Javascript is unoptimized: C++ code can easily compute roots of polynomials till degree 40</li>
             <li>Cannot pause and resume the process to find partial set of roots.</li>

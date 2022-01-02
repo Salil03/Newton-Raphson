@@ -32,7 +32,7 @@ function max_radius(polynomial, deg)
     knuth *= 2;
     return math.min(lagrange, cauchy, knuth);
 }
-let deg = 0;
+let d = 0;
 let roots = [];
 function getDegree()
 {
@@ -40,15 +40,15 @@ function getDegree()
     {
         return;
     }
-    deg = document.getElementById("degree").value;
-    if (!deg)
+    d = document.getElementById("degree").value;
+    if (!d)
     {
         return;
     }
     document.getElementById("placeholder").innerHTML = '';
     var polynomial_coeff = document.createElement("div");
     polynomial_coeff.setAttribute("style", "float:left");
-    for (let i = deg; i > 0; i--)
+    for (let i = d; i > 0; i--)
     {
         coeff = document.createElement("input")
         coeff.setAttribute("type", "number");
@@ -114,13 +114,18 @@ function newtonRaphson(idx, inputs, deg, polynomial, slope, rootsList, startCurr
     if (idx >= inputs.length || roots.length == deg)
     {
         startCurr.remove();
-        var plotRunner = document.createElement("button");
-        plotRunner.innerHTML = "Plot Roots";
-        plotRunner.setAttribute("onclick", "plotRoots()");
-        document.getElementById("placeholder").appendChild(plotRunner);
-        plotPlaceholder = document.createElement("div");
-        plotPlaceholder.setAttribute("id", "plot-placeholder");
-        document.getElementById("placeholder").appendChild(plotPlaceholder);
+        button_flag = true;
+        if (!document.getElementById("plotter"))
+        {
+            var plotRunner = document.createElement("button");
+            plotRunner.innerHTML = "Plot Roots";
+            plotRunner.setAttribute("onclick", "plotRoots()");
+            plotRunner.setAttribute("id", "plotter");
+            document.getElementById("placeholder").appendChild(plotRunner);
+            plotPlaceholder = document.createElement("div");
+            plotPlaceholder.setAttribute("id", "plot-placeholder");
+            document.getElementById("placeholder").appendChild(plotPlaceholder);
+        }
         return;
     }
     let input = inputs[idx];
@@ -210,9 +215,41 @@ function newtonRaphson(idx, inputs, deg, polynomial, slope, rootsList, startCurr
 }
 
 var start_radius = 0;
+button_flag = true;
 function calcRoots()
 {
-
+    if (!button_flag)
+    {
+        return;
+    }
+    button_flag = false;
+    var deg = d;
+    roots.length = 0;
+    start_radius = 0;
+    if (document.getElementsByTagName("h3")[0])
+    {
+        document.getElementsByTagName("h3")[0].remove();
+    }
+    if (document.getElementsByTagName("ol")[0])
+    {
+        document.getElementsByTagName("ol")[0].remove();
+    }
+    if (document.getElementById("loader"))
+    {
+        document.getElementById("loader").remove();
+    }
+    if (document.getElementById("radius-display"))
+    {
+        document.getElementById("radius-display").remove();
+    }
+    if (document.getElementById("plotter"))
+    {
+        document.getElementById("plotter").remove();
+    }
+    if (document.getElementById("plot-placeholder"))
+    {
+        document.getElementById("plot-placeholder").remove();
+    }
     let polynomial = Array(deg + 1);
     let slope = Array(deg);
     zeros = false;
@@ -241,30 +278,37 @@ function calcRoots()
         }
 
     }
-
+    var startCurr = document.createElement("h4");
+    startCurr.setAttribute("id", "loader");
     if (polynomial.length == 1 && polynomial[0] == 0)
     {
         startCurr.innerHTML = "It's an identity function!";
+
+        document.getElementById("placeholder").append(startCurr);
+        button_flag = true;
         return;
     }
     if (polynomial.length == 1 && polynomial[0] != 0)
     {
         startCurr.innerHTML = "No roots!";
+
+        document.getElementById("placeholder").append(startCurr);
+        button_flag = true;
         return;
     }
     derivative(polynomial, slope, deg);
-    const circles = math.max(2, math.ceil(0.26632 * math.log2(deg)));
-    const points = math.max(2, math.ceil(8.32547 * deg * math.log2(deg)));
+    const circles = math.max(2, math.ceil(0.26632 * math.log2(deg)) + 1);
+    const points = math.max(2, math.ceil(8.32547 * deg * math.log2(deg)) + 1);
     start_radius = max_radius(polynomial, deg);
 
-    document.getElementById("placeholder").appendChild(document.createElement("br"));
-    document.getElementById("placeholder").appendChild(document.createElement("br"));
-    document.getElementById("placeholder").appendChild(document.createElement("br"));
-    document.getElementById("placeholder").appendChild(document.createElement("h3").appendChild(document.createTextNode("Calculated Roots(maximum radius = " + start_radius.toFixed(4) + "):")));
+
+    var radiusDisplay = document.createElement("h3");
+    radiusDisplay.setAttribute("id", "radius-display");
+    radiusDisplay.innerHTML = "Calculated Roots(maximum radius = " + start_radius.toFixed(4) + "):";
+    document.getElementById("placeholder").appendChild(radiusDisplay);
     var rootsList = document.createElement("ol");
     document.getElementById("placeholder").append(rootsList);
-    document.getElementById("final-runner").remove();
-    var startCurr = document.createElement("h4");
+
     document.getElementById("placeholder").append(startCurr);
 
     let inputs = Array(circles * points);
@@ -278,7 +322,7 @@ function calcRoots()
                 inputs[(v - 1) * points + j] = math.Complex.fromPolar({ r: -polynomial[0], phi: 0 });
                 continue;
             }
-            inputs[(v - 1) * points + j] = math.Complex.fromPolar({ r: start_radius * (1 + math.sqrt(2)) * math.pow((deg - 1) / deg, (2 * v - 1) / (4 * circles)), phi: 2 * math.PI * j / points });
+            inputs[(v - 1) * points + j] = math.Complex.fromPolar({ r: start_radius * (1 + math.sqrt(2)) * math.pow((deg - 1) / deg, (2 * v - 1) / (4 * circles)), phi: 2 * math.PI * j / points + (v & 1) * math.PI / points });
         }
     }
     newtonRaphson(0, inputs, deg, polynomial, slope, rootsList, startCurr);
