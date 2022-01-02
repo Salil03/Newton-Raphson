@@ -11,12 +11,13 @@
     <script src="scripts/math.js" type="text/javascript"></script>
     <script src="scripts/jquery-3.6.0.min.js"></script>
     <script src="https://cdn.plot.ly/plotly-2.8.3.min.js"></script>
+
 </head>
 
 <body>
     <h1>Finding Polynomial Root Solutions</h1>
     <fieldset id="placeholder">
-        <p>Enter degree of polynomial(keep degree less than 20 if you don't want to wait too long)</p>
+        <p>Enter degree of polynomial</p>
         <input autofocus name="degree" type="number" id="degree">
         <br>
         <br>
@@ -35,7 +36,7 @@
         <p>where \(x_1\) is an initial guess. Notably, convergence point depends crucially on inital guess. Finding
             a
             set of
-            initial guesses which allow us to find each root is a non-trivial task. Mainly
+            initial guesses which allow us to find each root is a non-trivial task, mainly
             because a Newton map(which shows us where a particular starting point converges) is a fractal.</p>
         <p>An initial point \(z_1\) is in the basin of a root \(r\) if the sequence \(z_{n+1} = z_{n}
             + \frac{p(z_n)}{p^{\prime} (z_n)}, n \geq 1\) converges to \(r\).
@@ -47,8 +48,7 @@
             points don't converge at all.</p>
 
 
-        This paper gives a recipe to construct a finite set of points such that, for every root of every such
-        polynomial, at
+        This paper gives a recipe to construct a finite set of points such that, for every root, at
         least one of these points will converge to this root.
         Their main breakthrough is that only \(1.11 d \log^2 d\) inital points are required to guarantee the above
         condition, where \(d\) is degree of polynomial.
@@ -63,14 +63,28 @@
 
         <ol>
             <li>Get a polynomial \(p(x) = a_n x^n + a_{n-1} x^{n-1} + \dots + a_1 x + a_0\)</li>
-            <li>Find a radius \(R\) such that all roots lie within it. \(R = \sum_{i=0}^{n-1} \left\lvert
-                \frac{a_i}{a_n}\right\rvert\). Proof left to the reader :P</li>
-            <li>Construct \(v\) circles and \(j\) points on each of them placed equidistant to each other. The
+            <li>Find a radius \(R\) such that all roots lie within it. We can compute all bounds given on <a
+                    href="https://en.wikipedia.org/wiki/Geometrical_properties_of_polynomial_roots#Bounds_on_all_roots">Wikipedia</a>
+                and choose the smallest one.</li>
+            <li>Construct \(v\) circles and \(j\) points on each of them placed equidistant to each other. These are the
+                initial guesses. The
                 specifics
                 of
                 this step can be read in section 9</li>
-            <li>Run newton's algorithm till we get \(p(x) < 0.0000001\).</li>
+            <li>Run newton's algorithm till we get \(p(x) < 0.000001\) or till we reach a certain number of cycles
+                    without convergence.</li>
+            <li>Because coefficients of \(p(x)\) are real, we are guaranteed that \(\overline{z}\) is a root if \(z\) is
+                a root.</li>
         </ol>
+    </div>
+    <div id="todo">
+        <h3>Limitations</h3>
+        <ul>
+            <li>Very rarely, some roots are not found due to precision issues.</li>
+            <li>If you switch to another tab in browser, the process halts</li>
+            <li>Javascript is unoptimized: C++ code can easily compute roots of polynomials till degree 40</li>
+            <li>Cannot pause and resume the process to find partial set of roots.</li>
+        </ul>
     </div>
     <script src="scripts/main.js"></script>
 </body>
