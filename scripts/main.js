@@ -30,6 +30,7 @@ function max_radius(polynomial, deg)
     lagrange = math.max(1.0, lagrange);
     cauchy += 1;
     knuth *= 2;
+    console.log(math.max(lagrange, cauchy, knuth));
     return math.max(lagrange, cauchy, knuth);
 }
 let d = 0;
